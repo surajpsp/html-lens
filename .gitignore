@@ -1,0 +1,25 @@
+.gradle/
+build/
+.kotlin/
+*.iml
+.idea/
+local.properties
+.DS_Store
+node_modules/
+dist/
+.astro/
+kotlin-js-store/
+kcef-bundle/
+site/public/app/
+site/public/editor/
+.wrangler/
+
+# Cloudflare deploy output
+deploy/app/public/
+deploy/sandbox/public/
+
+# Local tooling
+.claude/
+hs_err_pid*.log
+*.hprof
+site/public/

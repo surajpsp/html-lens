@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HTML Lens — Open any HTML file safely</title>
+  <meta name="description" content="Open HTML, MHTML, ZIP, EML and Safari Web Archive files in your browser. Private, offline, nothing is uploaded.">
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#1E1A15">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #F6F1E7; }
+    @media (prefers-color-scheme: dark) { html, body { background: #1B1915; } }
+    #splash { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+      font: 500 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: #857C6C; transition: opacity .3s; z-index: 10; }
+    #splash img { width: 72px; height: 72px; animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse { 50% { transform: scale(.92); opacity: .75; } }
+  </style>
+  <script src="config.js"></script>
+  <script src="hv-web.js"></script>
+</head>
+<body>
+  <div id="splash"><img src="favicon.svg" alt=""><div>Loading HTML Lens…</div></div>
+  <noscript>HTML Lens needs JavaScript and WebAssembly. Please use a recent version of Chrome, Edge, Firefox or Safari.</noscript>
+  <script src="htmllens.js"></script>
+</body>
+</html>
