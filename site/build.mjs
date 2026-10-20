@@ -30,6 +30,7 @@ function layout({ path, title, description, body, jsonld = [], noindex = false, 
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="msvalidate.01" content="7B75C99E7371C13AAB97C09F84174C8D">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 <link rel="canonical" href="${url}">
@@ -335,6 +336,7 @@ ${indexable.map((p) => `  <url><loc>${SITE}${p.path}</loc><lastmod>${TODAY}</las
 </urlset>
 `);
 writeFileSync(join(out, `${INDEXNOW_KEY}.txt`), INDEXNOW_KEY);
+writeFileSync(join(out, 'BingSiteAuth.xml'), '<?xml version="1.0"?>\n<users>\n\t<user>7B75C99E7371C13AAB97C09F84174C8D</user>\n</users>\n');
 writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 
 // Assets
