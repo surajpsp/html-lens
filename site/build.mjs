@@ -46,6 +46,7 @@ ${noindex ? '<meta name="robots" content="noindex">' : ''}
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/assets/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/newsreader.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="stylesheet" href="/assets/site.css?v=${VERSION}">
@@ -349,6 +350,7 @@ for (const f of ['newsreader.ttf', 'plex_sans.ttf', 'plex_mono.ttf']) cpSync(joi
 const brand = join(root, 'branding/generated');
 cpSync(join(brand, 'og-image.png'), join(assets, 'og-image.png'));
 cpSync(join(brand, 'icon-180.png'), join(assets, 'apple-touch-icon.png'));
+cpSync(join(brand, 'icon-192.png'), join(assets, 'icon-192.png'));
 cpSync(join(brand, 'favicon.ico'), join(out, 'favicon.ico'));
 cpSync(join(root, 'branding/logo.svg'), join(out, 'favicon.svg'));
 
