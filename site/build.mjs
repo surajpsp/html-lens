@@ -14,6 +14,8 @@ const SANDBOX = (process.env.SANDBOX_URL || 'https://htmllens-sandbox.silentdev.
 const DOWNLOAD_BASE = (process.env.DOWNLOAD_BASE || '').replace(/\/$/, '');
 const TODAY = new Date().toISOString().slice(0, 10);
 const VERSION = '1.0.0';
+// IndexNow key (public by design): lets Bing, Yandex and others accept URL submissions for this host.
+export const INDEXNOW_KEY = 'b6cc8480acbbcf33df118e87dc78cbf2';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const toolBySlug = Object.fromEntries(tools.map((t) => [t.slug, t]));
@@ -332,6 +334,7 @@ writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 ${indexable.map((p) => `  <url><loc>${SITE}${p.path}</loc><lastmod>${TODAY}</lastmod>${p.path === '/' ? '<priority>1.0</priority>' : ''}</url>`).join('\n')}
 </urlset>
 `);
+writeFileSync(join(out, `${INDEXNOW_KEY}.txt`), INDEXNOW_KEY);
 writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 
 // Assets
