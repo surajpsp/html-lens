@@ -46,15 +46,16 @@ private object Frames {
 /** Publishes bundles to the sandbox origin (Cache Storage via host.html) once per revision. */
 private object Sandbox {
     val origin: String = hvSandboxOrigin()
-    private val published = HashMap<ViewSession, Pair<Int, String>>()
+    /** Keyed by the session's unique nonce (not the session) so closed sessions' bundles can be collected. */
+    private val published = HashMap<String, Pair<Int, String>>()
 
     suspend fun publish(session: ViewSession): String {
-        published[session]?.let { (rev, sid) -> if (rev == session.revision) return sid }
+        published[session.nonce]?.let { (rev, sid) -> if (rev == session.revision) return sid }
         val sid = session.key.filter { it.isLetterOrDigit() }.take(16) + "r" + session.revision + randomId(8)
         val arr = hvNewArray()
         for (f in session.bundle.files.values) hvPushFile(arr, f.path, f.mime, f.bytes.toUint8Array())
         hvSandboxPut(sid, session.bundle.entry, arr).await<JsAny?>()
-        published[session] = session.revision to sid
+        published[session.nonce] = session.revision to sid
         return sid
     }
 
@@ -94,7 +95,6 @@ private class WebFrame(private val session: ViewSession, private val primary: Bo
         }
         hvRegisterFrame(iframe, id)
         iframe.src = Sandbox.url(session, sid)
-        hvRegisterFrame(iframe, id)
     }
 
     fun setZoom(z: Float) {

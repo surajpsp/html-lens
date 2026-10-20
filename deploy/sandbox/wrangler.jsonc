@@ -4,5 +4,5 @@
   "compatibility_date": "2026-10-01",
   "assets": { "directory": "./public", "not_found_handling": "none" },
   "routes": [{ "pattern": "htmllens-sandbox.silentdev.online", "custom_domain": true }],
-  "workers_dev": true
+  "workers_dev": false
 }

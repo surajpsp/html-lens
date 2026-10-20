@@ -363,6 +363,8 @@ if (existsSync(join(dist, 'index.html'))) {
 
 writeFileSync(join(out, '_headers'), `/*
   X-Content-Type-Options: nosniff
+  Content-Security-Policy: frame-ancestors 'self'
+  X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 /assets/fonts/*

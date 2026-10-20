@@ -26,12 +26,14 @@ const sbOut = join(here, 'sandbox/public');
 rmSync(sbOut, { recursive: true, force: true });
 mkdirSync(sbOut, { recursive: true });
 cpSync(join(root, 'sandbox/public'), sbOut, { recursive: true });
-const origins = [`https://${APP}`, 'https://htmllens.pages.dev'];
+const origins = [`https://${APP}`];
 writeFileSync(join(sbOut, 'config.js'), `self.HV_CONFIG = ${JSON.stringify({ appOrigins: origins })};\n`);
 writeFileSync(join(sbOut, '_headers'), `/*
   X-Content-Type-Options: nosniff
   Referrer-Policy: same-origin
   X-Robots-Tag: noindex
+/host
+  Content-Security-Policy: frame-ancestors ${origins.join(' ')}
 /host.html
   Content-Security-Policy: frame-ancestors ${origins.join(' ')}
 /sw.js

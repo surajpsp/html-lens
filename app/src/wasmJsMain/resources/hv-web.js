@@ -189,32 +189,40 @@
   g.hvPostToFrame = (iframe, json, origin) => { try { iframe.contentWindow.postMessage(JSON.parse(json), origin); } catch (e) {} };
 
   // ---- Sandbox host: hidden iframe on the sandbox origin that stores bundle files ----
-  let hostFrame = null, hostReady = null, reqSeq = 0;
+  let hostFrame = null, hostReady = null, hostListener = null, reqSeq = 0;
   const pending = new Map();
   g.hvSandboxInit = function () {
     if (hostReady) return hostReady;
     const origin = g.hvSandboxOrigin();
     hostReady = new Promise((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error('Sandbox did not respond: ' + origin)), 20000);
-      window.addEventListener('message', (e) => {
+      hostListener = (e) => {
         if (e.origin !== origin || !e.data || !e.data.hvhost) return;
         if (e.data.hvhost === 'ready') { clearTimeout(timer); resolve(); }
         else if (e.data.reqId && pending.has(e.data.reqId)) { pending.get(e.data.reqId)(e.data); pending.delete(e.data.reqId); }
-      });
+      };
+      window.addEventListener('message', hostListener);
       hostFrame = document.createElement('iframe');
       hostFrame.src = origin + '/host';
       hostFrame.title = 'sandbox';
       hostFrame.style.cssText = 'position:absolute;width:0;height:0;border:0;visibility:hidden';
       document.body.appendChild(hostFrame);
+    }).catch((err) => {
+      // Let the next preview retry from scratch instead of failing until the app is reloaded.
+      window.removeEventListener('message', hostListener);
+      if (hostFrame) hostFrame.remove();
+      hostFrame = null; hostReady = null; hostListener = null;
+      throw err;
     });
     return hostReady;
   };
   g.hvNewArray = () => [];
   g.hvPushFile = (arr, path, mime, u8) => { arr.push({ path, mime, data: u8 }); };
   g.hvSandboxPut = function (id, entry, files) {
-    return g.hvSandboxInit().then(() => new Promise((resolve) => {
+    return g.hvSandboxInit().then(() => new Promise((resolve, reject) => {
       const reqId = ++reqSeq;
-      pending.set(reqId, () => resolve());
+      const timer = setTimeout(() => { pending.delete(reqId); reject(new Error('Sandbox did not store the files in time')); }, 60000);
+      pending.set(reqId, (d) => { clearTimeout(timer); if (d.error) reject(new Error(d.error)); else resolve(); });
       hostFrame.contentWindow.postMessage({ hvhost: 'put', reqId, id, entry, files }, g.hvSandboxOrigin());
     }));
   };
